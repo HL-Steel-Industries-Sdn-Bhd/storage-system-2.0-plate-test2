@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Plate Material Request</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; font-family: 'Segoe UI', Roboto, system-ui, sans-serif; }
+    body { background: #fff7e6; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 8px 6px; margin: 0; }
+    .form-container { max-width: 450px; width: 100%; background: #ffffff; border-radius: 20px; box-shadow: 0 4px 20px rgba(200, 150, 50, 0.15); padding: 16px 12px 20px; border: 2px solid #f0c27a; overflow-x: hidden; overflow-y: auto; max-height: 100vh; }
+    
+    .row-logo { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .logo-area { display: flex; align-items: center; gap: 8px; }
+    .title-main { font-size: 1.15rem; font-weight: 700; color: #b8860b; white-space: nowrap; }
+    .storekeeper-area { display: flex; align-items: center; gap: 5px; background: #fef3d7; padding: 5px 10px; border-radius: 20px; flex-shrink: 0; border: 1px solid #e8c87a; }
+    .storekeeper-label { font-weight: 600; color: #8b6f1e; font-size: 0.7rem; }
+    .storekeeper-name { font-weight: 700; color: #d4890a; font-size: 0.75rem; background: #fff8e7; padding: 2px 8px; border-radius: 15px; border: 1px solid #e8c87a; }
+    
+    .copy-group {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    
+    .copy-count-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid #b8860b;
+      background: #fff8e7;
+      color: #b8860b;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      line-height: 1;
+      transition: all 0.15s;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .copy-count-circle:hover {
+      background: #b8860b;
+      color: #fff8e7;
+    }
+    .copy-count-circle:active {
+      transform: scale(0.9);
+    }
+    
+    .copy-btn {
+      background: #b8860b;
+      color: white;
+      border: none;
+      padding: 7px 13px;
+      border-radius: 18px;
+      font-weight: 600;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover {
+      background: #d4a017;
+    }
+    .copy-btn:active {
+      transform: scale(0.96);
+      background: #9a7209;
+    }
+    
+    .row { display: flex; align-items: center; margin-bottom: 10px; gap: 8px; flex-wrap: wrap; }
+    
+    .so-item-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .so-item-fields { display: flex; gap: 8px; flex: 4; }
+    .so-item-fields .field-pair { flex: 1; }
+    .urgent-tick { flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px; background: #fff3d6; padding: 4px 6px; border-radius: 20px; border: 1px solid #f0c27a; }
+    .urgent-tick input { width: 14px; height: 14px; margin: 0; cursor: pointer; flex-shrink: 0; accent-color: #d4890a; }
+    .urgent-tick label { font-weight: 600; color: #b8860b; cursor: pointer; font-size: 0.6rem; line-height: 1.2; text-align: center; }
+    
+    .field-pair { display: flex; align-items: center; gap: 6px; flex: 1; }
+    .field-pair label { font-weight: 600; color: #8b6f1e; font-size: 0.8rem; white-space: nowrap; min-width: 55px; }
+    .field-pair input { width: 100%; padding: 8px 6px; border: 1.5px solid #e8c87a; border-radius: 10px; font-size: 0.85rem; background: #fffcf5; color: #4a3a1a; }
+    .field-pair input:focus { outline: none; border-color: #d4a017; box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.15); }
+    .field-pair input[readonly] { background: #fef7ea; cursor: default; outline: none; color: #6b5a2a; }
+    .field-pair input[readonly]:focus { outline: none; border-color: #e8c87a; box-shadow: none; }
+    .field-pair select { width: 100%; padding: 8px 6px; border: 1.5px solid #e8c87a; border-radius: 10px; font-size: 0.85rem; background: #fffcf5; color: #4a3a1a; }
+    .field-pair select:focus { outline: none; border-color: #d4a017; box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.15); }
+    
+    .action-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .action-row .field-pair { flex: 1; }
+    
+    .submit-btn { background: #f0d0a0; color: #8b6f1e; border: 2px solid #d4a87a; padding: 10px 20px; border-radius: 40px; font-weight: 700; font-size: 0.95rem; cursor: not-allowed; white-space: nowrap; transition: all 0.2s; }
+    .submit-btn.active { background: #d4a017; color: white; border-color: #b8860b; cursor: pointer; }
+    .submit-btn.active:hover { background: #e8b830; }
+    .submit-btn.submitted { background: #f0d0a0; color: #8b6f1e; border-color: #d4a87a; cursor: not-allowed; opacity: 0.8; }
+    
+    .message-bar { min-height: 36px; border-radius: 12px; padding: 6px 12px; margin: 8px 0; font-weight: 500; font-size: 0.8rem; word-break: break-word; }
+    .error-bar { background: #fdf0ed; color: #b33c2a; border-left: 4px solid #b33c2a; }
+    .success-bar { background: #f0f7e8; color: #5a8a2a; border-left: 4px solid #5a8a2a; }
+    .info-bar { background: #fef7e0; color: #b8860b; border-left: 4px solid #b8860b; }
+    .warning-bar { background: #fff3d6; color: #c97d0e; border-left: 4px solid #c97d0e; }
+    .ready-bar { background: #fef7e0; color: #b8860b; border-left: 4px solid #b8860b; }
+    
+    .plate-block { margin-top: 16px; margin-bottom: 12px; border-top: 2px solid #f0c27a; padding-top: 12px; }
+    .plate-title { font-weight: 700; margin-bottom: 8px; color: #b8860b; font-size: 1rem; }
+    
+    .plate-table-row1 { width: 100%; border-collapse: collapse; background: #fffcf5; border-radius: 10px; margin-bottom: 8px; table-layout: fixed; border: 1px solid #e8c87a; overflow: hidden; }
+    .plate-table-row1 th, .plate-table-row1 td { width: 33.333%; }
+    .plate-table-row1 th { background: #b8860b; color: #ffffff; font-weight: 600; font-size: 0.6rem; padding: 5px 1px; text-align: center; }
+    .plate-table-row1 td { padding: 5px 1px; border-bottom: 1px solid #f0d8b0; text-align: center; background: #fffcf5; }
+    .plate-table-row1 td:last-child { border-bottom: none; }
+    .plate-table-row1 select { width: 100%; padding: 6px 1px; border-radius: 8px; border: 1.5px solid #e8c87a; background: #fffcf5; font-size: 0.7rem; text-align: center; color: #4a3a1a; }
+    .plate-table-row1 select:focus { outline: none; border-color: #d4a017; box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.12); }
+    .plate-table-row1 input[readonly] { width: 100%; padding: 6px 1px; border-radius: 8px; border: 1.5px solid #e8c87a; background: #fef7ea; font-size: 0.7rem; text-align: center; outline: none; color: #6b5a2a; }
+    
+    .plate-table-row2 { width: 100%; border-collapse: collapse; background: #fffcf5; border-radius: 10px; margin-bottom: 8px; table-layout: fixed; border: 1px solid #e8c87a; overflow: hidden; }
+    .plate-table-row2 th, .plate-table-row2 td { width: 33.333%; }
+    .plate-table-row2 th { background: #b8860b; color: #ffffff; font-weight: 600; font-size: 0.6rem; padding: 5px 1px; text-align: center; }
+    .plate-table-row2 td { padding: 5px 1px; border-bottom: 1px solid #f0d8b0; text-align: center; background: #fffcf5; }
+    .plate-table-row2 td:last-child { border-bottom: none; }
+    .plate-table-row2 select { width: 100%; padding: 6px 1px; border-radius: 8px; border: 1.5px solid #e8c87a; background: #fffcf5; font-size: 0.7rem; text-align: center; color: #4a3a1a; }
+    .plate-table-row2 select:focus { outline: none; border-color: #d4a017; box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.12); }
+    .plate-table-row2 input { width: 100%; padding: 6px 1px; border-radius: 8px; border: 1.5px solid #e8c87a; background: #fffcf5; font-size: 0.7rem; text-align: center; color: #4a3a1a; }
+    .plate-table-row2 input:focus { outline: none; border-color: #d4a017; box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.12); }
+    .plate-table-row2 input[readonly] { background: #fef7ea; color: #6b5a2a; }
+    
+    .calc-table { width: 100%; border-collapse: collapse; margin-top: 6px; background: #fffcf5; border-radius: 10px; table-layout: fixed; border: 1px solid #e8c87a; overflow: hidden; }
+    .calc-table th { background: #d4a017; color: #ffffff; padding: 5px 1px; font-size: 0.6rem; font-weight: 600; text-align: center; }
+    .calc-table td { padding: 5px 1px; background: #fffcf5; border: 1px solid #f0d8b0; text-align: center; }
+    .calc-table input { width: 100%; padding: 6px 1px; border-radius: 8px; border: 1.5px solid #e8c87a; background: #fffcf5; font-size: 0.75rem; text-align: center; color: #4a3a1a; }
+    .calc-table input:focus { outline: none; border-color: #d4a017; box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.12); }
+    
+    .status-cell { font-size: 0.65rem; text-align: center; font-weight: 600; }
+    .icon-valid { color: #5a8a2a; }
+    .icon-invalid { color: #b33c2a; }
+    .icon-leftover { color: #c97d0e; }
+    .info-note { font-size: 0.6rem; color: #8b7a5a; margin-top: 3px; text-align: right; }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #b8860b; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 6px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .urgent-mode-active { background: #fffbf0; border: 2px solid #f0c27a; }
+    
+    input:disabled, select:disabled { background: #f5ede0 !important; color: #9a8a70 !important; cursor: not-allowed; }
+
+    #modalYesBtn:disabled { background: #d4c8a0 !important; cursor: not-allowed; opacity: 0.7; }
+
+    /* 模态框橙色主题 */
+    #errorModal > div { border: 2px solid #f0c27a; }
+    #errorModal h3 { color: #b8860b; }
+    #errorModal #modalYesBtn { background: #d4a017; color: white; }
+    #errorModal #modalYesBtn:hover:not(:disabled) { background: #e8b830; }
+    #errorModal #modalNoBtn { background: #c0392b; color: white; }
+    #errorModal #modalNoBtn:hover { background: #e74c3c; }
+    
+    #urgentModal > div { border: 2px solid #f0c27a; }
+    #urgentModal h3 { color: #b8860b; }
+    #urgentModal #urgentModalOkBtn { background: #d4a017; color: white; }
+    #urgentModal #urgentModalOkBtn:hover { background: #e8b830; }
+    #urgentModal #urgentModalCancelBtn { background: #bdc3a0; color: #4a3a1a; }
+    #urgentModal #urgentModalCancelBtn:hover { background: #d0c8b0; }
+    #urgentModal input { border-color: #e8c87a; background: #fffcf5; }
+    #urgentModal input:focus { outline: none; border-color: #d4a017; box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.12); }
+  </style>
+</head>
+<body>
+<div class="form-container" id="formContainer">
+  <div class="row-logo">
+    <div class="logo-area">
+      <div class="copy-group">
+        <div class="copy-count-circle" id="copyCountCircle" title="Click to increase copy count">+</div>
+        <button class="copy-btn" id="copyBtn" title="Copy current form data to new tabs">Copy</button>
+      </div>
+      <span class="title-main">Plate Request</span>
+    </div>
+    <div class="storekeeper-area">
+      <span class="storekeeper-label">Storekeeper:</span>
+      <span class="storekeeper-name" id="storekeeperName">-</span>
+    </div>
+  </div>
+
+  <div class="so-item-row">
+    <div class="so-item-fields">
+      <div class="field-pair"><label>SO No.</label><input type="text" id="soNo" placeholder="XXXXXXA" maxlength="20"></div>
+      <div class="field-pair"><label>Item No.</label><input type="text" id="itemNo" placeholder="XXXA" maxlength="20"></div>
+    </div>
+    <div class="urgent-tick">
+      <input type="checkbox" id="urgentModeCheckbox">
+      <label for="urgentModeCheckbox">Urgent: No<br>SO Info</label>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="field-pair"><label>Customer</label><input type="text" id="customerName" placeholder="Customer name" style="max-width: none;" readonly></div>
+  </div>
+
+  <div class="row">
+    <div class="field-pair"><label>Delivery</label><input type="date" id="deliveryDate" style="max-width: none;" readonly></div>
+  </div>
+
+  <div class="action-row">
+    <div class="field-pair"><label>Requestor</label>
+      <select id="requestor">
+        <option value="">Loading...</option>
+      </select>
+    </div>
+    <button class="submit-btn" id="submitBtn" disabled>Submit</button>
+  </div>
+
+  <div id="messageBar" class="message-bar error-bar"></div>
+
+  <div id="platesContainer"></div>
+</div>
+
+<!-- 错误确认弹窗 -->
+<div id="errorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center;">
+    <div style="background: #ffffff; padding: 20px; border-radius: 15px; text-align: center; max-width: 400px; width: 90%; border: 2px solid #f0c27a;">
+        <h3 style="margin-bottom: 15px; color: #b8860b; font-size: 20px;">⚠️ Confirm Submission</h3>
+        <div style="background: #fef7ea; padding: 12px; border-radius: 8px; margin-bottom: 18px; text-align: left; max-height: 250px; overflow-y: auto; border: 1px solid #f0d8b0;">
+            <div id="modalErrorList" style="color: #4a3a1a; font-size: 13px; line-height: 1.5;"></div>
+        </div>
+        <p style="margin-bottom: 18px; color: #6b5a2a;">Continue with these issues? (Will be recorded in sheet)</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button id="modalYesBtn" style="padding: 10px 25px; background: #d4a017; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Yes (5s)</button>
+            <button id="modalNoBtn" style="padding: 10px 25px; background: #c0392b; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">No, Go Back</button>
+        </div>
+    </div>
+</div>
+
+<!-- 紧急模式弹窗 -->
+<div id="urgentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2100; align-items: center; justify-content: center;">
+    <div style="background: #ffffff; padding: 20px; border-radius: 15px; max-width: 350px; width: 90%; border: 2px solid #f0c27a;">
+        <h3 style="margin-bottom: 15px; color: #b8860b; font-size: 18px;">⚠️ Urgent Request Info</h3>
+        <p style="font-size: 12px; color: #6b5a2a; margin-bottom: 15px;">You are submitting without SO/Item. Please provide:</p>
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: #8b6f1e;">Project PIC <span style="color: #b33c2a;">*</span></label>
+            <input type="text" id="urgentProjectPIC" placeholder="Person in charge" style="width: 100%; padding: 8px; border-radius: 8px; border: 1.5px solid #e8c87a; background: #fffcf5; color: #4a3a1a;">
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 5px; font-size: 13px; color: #8b6f1e;">Customer Info</label>
+            <input type="text" id="urgentCustomerInfo" placeholder="Customer details if known" style="width: 100%; padding: 8px; border-radius: 8px; border: 1.5px solid #e8c87a; background: #fffcf5; color: #4a3a1a;">
+        </div>
+        <div id="urgentModalError" style="color: #b33c2a; font-size: 12px; margin-bottom: 10px; display: none;">Please fill in Project PIC</div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button id="urgentModalOkBtn" style="padding: 8px 20px; background: #d4a017; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">OK</button>
+            <button id="urgentModalCancelBtn" style="padding: 8px 20px; background: #bdc3a0; color: #4a3a1a; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+  (function(){
+    "use strict";
+
+    // ============================================================
+    // 【占位符】请替换为你的 GAS Web App URL
+    // ============================================================
+    const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxOA5o0XZj8qb27LnS6Gy4HnWDngcyD_8sVI2w_-NAHbglhkSKHa5kkGe8RX80upSdL/exec';
+
+    // ============================================================
+
+    const plateBindings = {};
+
+    const soNo = document.getElementById('soNo');
+    const itemNo = document.getElementById('itemNo');
+    const customerName = document.getElementById('customerName');
+    const deliveryDate = document.getElementById('deliveryDate');
+    const requestorSelect = document.getElementById('requestor');
+    const submitBtn = document.getElementById('submitBtn');
+    const messageBar = document.getElementById('messageBar');
+    const platesContainer = document.getElementById('platesContainer');
+    const errorModal = document.getElementById('errorModal');
+    const modalErrorList = document.getElementById('modalErrorList');
+    const modalYesBtn = document.getElementById('modalYesBtn');
+    const modalNoBtn = document.getElementById('modalNoBtn');
+    const urgentModeCheckbox = document.getElementById('urgentModeCheckbox');
+    const urgentModal = document.getElementById('urgentModal');
+    const urgentProjectPIC = document.getElementById('urgentProjectPIC');
+    const urgentCustomerInfo = document.getElementById('urgentCustomerInfo');
+    const urgentModalError = document.getElementById('urgentModalError');
+    const formContainer = document.getElementById('formContainer');
+    const storekeeperNameSpan = document.getElementById('storekeeperName');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyCountCircle = document.getElementById('copyCountCircle');
+
+    let currentData = null;
+    let currentErrors = [];
+    let hasSubmitted = false;
+    let isUrgentMode = false;
+    let urgentData = { projectPIC: '', customerInfo: '' };
+    let pendingUrgentCheck = false;
+    let storeKeeperName = '';
+    let soItemDebounceTimer = null;
+    let countdownTimer = null;
+    let isSubmitEnabled = false;
+    let hasBlockingErrors = false;
+    let copyCount = 1;
+    
+    let referenceOptions = {
+      requestor: [],
+      grade: [],
+      surface: [],
+      dimension: [],
+      thickness: [],
+      location: []
+    };
+
+    // ========== Copy 功能 ==========
+    function updateCopyCountDisplay() {
+      if (copyCount <= 1) {
+        copyCountCircle.textContent = '+';
+      } else {
+        copyCountCircle.textContent = copyCount;
+      }
+    }
+    
+    function handleCopyCountCircleClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      copyCount++;
+      updateCopyCountDisplay();
+    }
+    
+    function collectCurrentFormData() {
+      const data = {
+        storeKeeper: storeKeeperName,
+        isUrgentMode: isUrgentMode,
+        urgentData: isUrgentMode ? {
+          projectPIC: urgentData.projectPIC,
+          customerInfo: urgentData.customerInfo
+        } : null
+      };
+
+      if (!isUrgentMode) {
+        data.soNo = soNo.value.trim();
+        data.itemNo = itemNo.value.trim();
+        data.customerName = customerName.value.trim();
+        data.deliveryDate = deliveryDate.value;
+      }
+
+      data.requestor = requestorSelect.value;
+
+      data.plates = [];
+      for (let i = 1; i <= 5; i++) {
+        const plateData = {
+          grade: document.getElementById(`grade${i}`).value,
+          surface: document.getElementById(`surface${i}`).value,
+          location: document.getElementById(`location${i}`).value,
+          dimension: document.getElementById(`dimension${i}`).value,
+          thickness: document.getElementById(`thickness${i}`).value,
+          pieceArea: document.getElementById(`pieceArea${i}`).value,
+          pieceFraction: document.getElementById(`pieceFraction${i}`).value,
+          actualFullPlateQty: document.getElementById(`actualFullPlateQty${i}`).value
+        };
+        data.plates.push(plateData);
+      }
+
+      return data;
+    }
+
+    function handleCopyClick(e) {
+      e.preventDefault();
+      
+      const formData = collectCurrentFormData();
+      const jsonStr = JSON.stringify(formData);
+      const encoded = encodeURIComponent(jsonStr);
+      
+      const currentUrl = new URL(window.location.href);
+      currentUrl.searchParams.set('data', encoded);
+      const targetUrl = currentUrl.toString();
+      
+      let successCount = 0;
+      let failCount = 0;
+      const countToCopy = copyCount;
+      
+      for (let i = 0; i < countToCopy; i++) {
+        const newTab = window.open(targetUrl, '_blank');
+        if (newTab) {
+          successCount++;
+        } else {
+          failCount++;
+        }
+      }
+      
+      if (failCount === 0) {
+        messageBar.className = 'message-bar success-bar';
+        messageBar.innerHTML = '✅ Opened ' + successCount + ' new tab(s) with copied data!';
+      } else {
+        messageBar.className = 'message-bar warning-bar';
+        messageBar.innerHTML = '⚠️ Opened ' + successCount + '/' + countToCopy + ' tabs. ' + failCount + ' blocked. Allow pop-ups.';
+      }
+      
+      copyCount = 1;
+      updateCopyCountDisplay();
+      setTimeout(() => updateUI(), 3000);
+    }
+
+    function populateFormFromData(data) {
+      function fillData() {
+        if (!data.isUrgentMode) {
+          if (data.soNo) soNo.value = data.soNo;
+          if (data.itemNo) itemNo.value = data.itemNo;
+          if (data.customerName) customerName.value = data.customerName;
+          if (data.deliveryDate) deliveryDate.value = data.deliveryDate;
+          urgentModeCheckbox.checked = false;
+        } else {
+          urgentModeCheckbox.checked = true;
+          isUrgentMode = true;
+          urgentData = data.urgentData || { projectPIC: '', customerInfo: '' };
+          soNo.value = '';
+          itemNo.value = '';
+          customerName.value = '';
+          deliveryDate.value = '';
+          soNo.disabled = true;
+          itemNo.disabled = true;
+          formContainer.classList.add('urgent-mode-active');
+        }
+
+        if (data.requestor) {
+          const setRequestor = () => {
+            if (requestorSelect.options.length > 1) {
+              requestorSelect.value = data.requestor;
+            } else {
+              setTimeout(setRequestor, 100);
+            }
+          };
+          setRequestor();
+        }
+
+        if (data.plates && data.plates.length > 0) {
+          const setPlates = () => {
+            let allReady = true;
+            for (let i = 0; i < data.plates.length; i++) {
+              const idx = i + 1;
+              const gradeEl = document.getElementById(`grade${idx}`);
+              if (gradeEl && gradeEl.options.length <= 1) {
+                allReady = false;
+                break;
+              }
+            }
+            
+            if (!allReady) {
+              setTimeout(setPlates, 100);
+              return;
+            }
+
+            for (let i = 0; i < data.plates.length; i++) {
+              const plate = data.plates[i];
+              const idx = i + 1;
+              
+              if (plate.grade) document.getElementById(`grade${idx}`).value = plate.grade;
+              if (plate.surface) document.getElementById(`surface${idx}`).value = plate.surface;
+              if (plate.location) document.getElementById(`location${idx}`).value = plate.location;
+              if (plate.dimension) document.getElementById(`dimension${idx}`).value = plate.dimension;
+              if (plate.thickness) document.getElementById(`thickness${idx}`).value = plate.thickness;
+              if (plate.pieceArea) document.getElementById(`pieceArea${idx}`).value = plate.pieceArea;
+              if (plate.pieceFraction) document.getElementById(`pieceFraction${idx}`).value = plate.pieceFraction;
+              if (plate.actualFullPlateQty) document.getElementById(`actualFullPlateQty${idx}`).value = plate.actualFullPlateQty;
+              
+              updateCurrentStock(idx);
+            }
+            
+            updateUI();
+            
+            if (!isUrgentMode && soNo.value.trim() && itemNo.value.trim()) {
+              onSoOrItemChange();
+            }
+          };
+          
+          setPlates();
+        }
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', fillData);
+      } else {
+        fillData();
+      }
+    }
+
+    function checkForPreloadedData() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const dataParam = urlParams.get('data');
+      
+      if (dataParam) {
+        try {
+          const decoded = decodeURIComponent(dataParam);
+          const data = JSON.parse(decoded);
+          setTimeout(() => {
+            populateFormFromData(data);
+          }, 500);
+        } catch (e) {
+          console.error('Failed to parse preloaded data:', e);
+        }
+      }
+    }
+
+    // ========== 验证函数 ==========
+    function validateSONo(value) {
+      return /^\d{6}[A-Z]?$/.test(value);
+    }
+
+    function validateItemNo(value) {
+      return /^\d+[A-Z]?$/.test(value);
+    }
+
+    function getStorekeeperFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let name = urlParams.get('H');
+      if (name) {
+        name = name.replace(/-/g, ' ');
+        name = name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        return name;
+      }
+      return 'Unknown';
+    }
+
+    function initStorekeeper() {
+      storeKeeperName = getStorekeeperFromUrl();
+      storekeeperNameSpan.textContent = storeKeeperName;
+    }
+
+    // ========== 获取参考选项 ==========
+    async function fetchReferenceOptions() {
+      try {
+        const url = GAS_WEBAPP_URL + '?action=getReferenceOptions';
+        const response = await fetch(url, { method: 'GET' });
+        const result = await response.json();
+        if (result.success && result.options) {
+          referenceOptions = result.options;
+          return true;
+        }
+        console.error('Failed to fetch options:', result.error);
+        return false;
+      } catch (error) {
+        console.error('Error fetching options:', error);
+        return false;
+      }
+    }
+    
+    function populateSelect(selectElement, options, defaultText = '-') {
+      if (!selectElement) return;
+      const currentValue = selectElement.value;
+      selectElement.innerHTML = '<option value="">' + defaultText + '</option>';
+      if (options && options.length > 0) {
+        options.forEach(option => {
+          const opt = document.createElement('option');
+          opt.value = option;
+          opt.textContent = option;
+          selectElement.appendChild(opt);
+        });
+      }
+      if (currentValue && Array.from(selectElement.options).some(opt => opt.value === currentValue)) {
+        selectElement.value = currentValue;
+      }
+    }
+    
+    function populateRequestorSelect() {
+      requestorSelect.innerHTML = '<option value="">Select Requestor</option>';
+      if (referenceOptions.requestor && referenceOptions.requestor.length > 0) {
+        referenceOptions.requestor.forEach(option => {
+          const opt = document.createElement('option');
+          opt.value = option;
+          opt.textContent = option;
+          requestorSelect.appendChild(opt);
+        });
+      } else {
+        ['Alex Tan', 'Ben Lim', 'Carol Wong', 'David Koh', 'Eddie Ng'].forEach(option => {
+          const opt = document.createElement('option');
+          opt.value = option;
+          opt.textContent = option;
+          requestorSelect.appendChild(opt);
+        });
+      }
+    }
+    
+    function populateAllPlateDropdowns() {
+      for (let i = 1; i <= 5; i++) {
+        const gradeSelect = document.getElementById('grade' + i);
+        const surfaceSelect = document.getElementById('surface' + i);
+        const locationSelect = document.getElementById('location' + i);
+        const dimensionSelect = document.getElementById('dimension' + i);
+        const thicknessSelect = document.getElementById('thickness' + i);
+        
+        if (gradeSelect) populateSelect(gradeSelect, referenceOptions.grade, '-');
+        if (surfaceSelect) populateSelect(surfaceSelect, referenceOptions.surface, '-');
+        if (locationSelect) populateSelect(locationSelect, referenceOptions.location, '-');
+        if (dimensionSelect) populateSelect(dimensionSelect, referenceOptions.dimension, '-');
+        if (thicknessSelect) populateSelect(thicknessSelect, referenceOptions.thickness, '-');
+      }
+    }
+
+    function updateCurrentStock(i) {
+      const grade = document.getElementById('grade' + i).value;
+      const surface = document.getElementById('surface' + i).value;
+      const location = document.getElementById('location' + i).value;
+      const dimension = document.getElementById('dimension' + i).value;
+      const thickness = document.getElementById('thickness' + i).value;
+      const stockEl = document.getElementById('currentStock' + i);
+      
+      if (grade || surface || location || dimension || thickness) {
+        stockEl.value = '24 pcs';
+      } else {
+        stockEl.value = '';
+      }
+    }
+
+    // ========== 验证单个 Plate ==========
+    function validatePlate(i) {
+      const grade = document.getElementById('grade' + i).value;
+      const surface = document.getElementById('surface' + i).value;
+      const location = document.getElementById('location' + i).value;
+      const dimension = document.getElementById('dimension' + i).value;
+      const thickness = document.getElementById('thickness' + i).value;
+      const pieceArea = parseFloat(document.getElementById('pieceArea' + i).value) || 0;
+      const pieceFraction = parseFloat(document.getElementById('pieceFraction' + i).value) || 0;
+      const actualFullPlateQty = parseFloat(document.getElementById('actualFullPlateQty' + i).value) || 0;
+      
+      const isEmpty = !grade && !surface && !location && !dimension && !thickness && 
+                      pieceArea === 0 && pieceFraction === 0 && actualFullPlateQty === 0;
+      
+      if (i > 1 && isEmpty) {
+        document.getElementById('status' + i).innerHTML = '';
+        return { blockingErrors: [], nonBlockingErrors: [], isEmpty: true };
+      }
+      
+      let blockingErrors = [];
+      let nonBlockingErrors = [];
+      
+      let missingFields = [];
+      if (!grade) missingFields.push('Grade');
+      if (!surface) missingFields.push('Surface');
+      if (!location) missingFields.push('Location');
+      if (!dimension) missingFields.push('Dimension');
+      if (!thickness) missingFields.push('Thickness');
+      if (pieceArea <= 0) missingFields.push('Piece Area');
+      if (pieceFraction <= 0) missingFields.push('Piece Fraction');
+      
+      if (missingFields.length > 0) {
+        blockingErrors.push('Plate ' + i + ': Missing ' + missingFields.join(', '));
+      }
+      
+      if (blockingErrors.length === 0) {
+        if (actualFullPlateQty === 0) {
+          nonBlockingErrors.push('Plate ' + i + ': Actual Full Plate Qty = 0 (using leftover?)');
+        }
+      }
+      
+      if (blockingErrors.length > 0 || nonBlockingErrors.length > 0) {
+        document.getElementById('status' + i).innerHTML = '<span class="icon-invalid">❌</span>';
+      } else if (!isEmpty) {
+        document.getElementById('status' + i).innerHTML = '<span class="icon-valid">✅</span>';
+      }
+      
+      return { blockingErrors, nonBlockingErrors, isEmpty };
+    }
+
+    function collectAllErrors() {
+      let allBlocking = [];
+      let allNonBlocking = [];
+      const errorMap = {};
+      
+      for (let i = 1; i <= 5; i++) {
+        const result = validatePlate(i);
+        if (!result.isEmpty) {
+          errorMap[i] = [...result.blockingErrors, ...result.nonBlockingErrors].join('; ');
+          allBlocking = allBlocking.concat(result.blockingErrors);
+          allNonBlocking = allNonBlocking.concat(result.nonBlockingErrors);
+        } else {
+          errorMap[i] = '';
+        }
+      }
+      
+      let hasPlate = false;
+      for (let i = 1; i <= 5; i++) {
+        if (document.getElementById('grade' + i).value) { hasPlate = true; break; }
+      }
+      if (!hasPlate) {
+        allBlocking.push('Please fill at least one plate completely.');
+      }
+      
+      return { blockingErrors: allBlocking, nonBlockingErrors: allNonBlocking, errorMap };
+    }
+
+    function hasAtLeastOneCompletePlate() {
+      for (let i = 1; i <= 5; i++) {
+        const grade = document.getElementById('grade' + i).value;
+        const surface = document.getElementById('surface' + i).value;
+        const location = document.getElementById('location' + i).value;
+        const dimension = document.getElementById('dimension' + i).value;
+        const thickness = document.getElementById('thickness' + i).value;
+        const pieceArea = parseFloat(document.getElementById('pieceArea' + i).value) || 0;
+        const pieceFraction = parseFloat(document.getElementById('pieceFraction' + i).value) || 0;
+        
+        if (grade && surface && location && dimension && thickness && pieceArea > 0 && pieceFraction > 0) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function evaluateSubmitCondition() {
+      if (hasSubmitted) return false;
+      if (!requestorSelect.value.trim()) return false;
+      if (!hasAtLeastOneCompletePlate()) return false;
+      
+      if (!isUrgentMode) {
+        const soValid = validateSONo(soNo.value.trim());
+        const itemValid = validateItemNo(itemNo.value.trim());
+        const customerOk = customerName.value.trim() !== '';
+        if (!soValid || !itemValid || !customerOk) return false;
+      }
+      
+      if (hasBlockingErrors) return false;
+      
+      return true;
+    }
+
+    function getMessageBarContent() {
+      if (hasSubmitted) {
+        return { className: 'message-bar success-bar', html: '✅ Submitted successfully!' };
+      }
+      
+      if (!requestorSelect.value.trim()) {
+        return { className: 'message-bar error-bar', html: '❌ Please select Requestor' };
+      }
+      
+      if (!isUrgentMode) {
+        if (!validateSONo(soNo.value.trim()) || !validateItemNo(itemNo.value.trim())) {
+          return { className: 'message-bar error-bar', html: '❌ SO No. (6 digits + opt letter) / Item No. (numbers + opt letter) invalid' };
+        }
+        if (!customerName.value) {
+          return { className: 'message-bar error-bar', html: '❌ SO No. + Item No. not found' };
+        }
+      }
+      
+      const { blockingErrors, nonBlockingErrors } = collectAllErrors();
+      const allErrors = [...blockingErrors, ...nonBlockingErrors];
+      
+      if (allErrors.length > 0) {
+        return { className: 'message-bar error-bar', html: '❌ ' + allErrors.join('<br>• ') };
+      }
+      
+      if (!hasAtLeastOneCompletePlate()) {
+        return { className: 'message-bar error-bar', html: '❌ Fill at least one plate completely' };
+      }
+      
+      return { className: 'message-bar ready-bar', html: '🔵 Ready to Submit' };
+    }
+
+    // ========== 获取 Customer 和 Delivery Date ==========
+    async function fetchCustomerAndDeliveryDate(soValue, itemValue) {
+      if (!soValue || !itemValue) return null;
+      const formBody = new URLSearchParams();
+      formBody.append('action', 'checkSoItem');
+      formBody.append('soNo', soValue);
+      formBody.append('itemNo', itemValue);
+      try {
+        const response = await fetch(GAS_WEBAPP_URL, { method: 'POST', body: formBody });
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch error:', error);
+        return { success: false, error: 'Network error' };
+      }
+    }
+
+    async function onSoOrItemChange() {
+      if (isUrgentMode) return;
+      const soValue = soNo.value.trim();
+      const itemValue = itemNo.value.trim();
+      
+      if (!validateSONo(soValue) || !validateItemNo(itemValue)) {
+        customerName.value = '';
+        deliveryDate.value = '';
+        updateUI();
+        return;
+      }
+      
+      customerName.value = 'Loading...';
+      deliveryDate.value = '';
+      
+      const result = await fetchCustomerAndDeliveryDate(soValue, itemValue);
+      if (result.success) {
+        customerName.value = result.customerName || '';
+        if (result.deliveryDate) deliveryDate.value = result.deliveryDate;
+        else deliveryDate.value = '';
+      } else {
+        customerName.value = '';
+        deliveryDate.value = '';
+      }
+      updateUI();
+    }
+
+    function updateUI() {
+      for (let i = 1; i <= 5; i++) {
+        updateCurrentStock(i);
+      }
+
+      const { blockingErrors, nonBlockingErrors, errorMap } = collectAllErrors();
+      hasBlockingErrors = blockingErrors.length > 0;
+      currentErrors = [...blockingErrors, ...nonBlockingErrors];
+
+      const ready = evaluateSubmitCondition();
+      isSubmitEnabled = ready;
+      
+      if (hasSubmitted) {
+        submitBtn.disabled = true;
+        submitBtn.classList.remove('active');
+        submitBtn.textContent = 'Submitted';
+        submitBtn.classList.add('submitted');
+      } else {
+        submitBtn.textContent = 'Submit';
+        submitBtn.classList.remove('submitted');
+        if (ready) {
+          submitBtn.disabled = false;
+          submitBtn.classList.add('active');
+        } else {
+          submitBtn.disabled = true;
+          submitBtn.classList.remove('active');
+        }
+      }
+
+      const msgContent = getMessageBarContent();
+      messageBar.className = msgContent.className;
+      messageBar.innerHTML = msgContent.html;
+    }
+
+    // ========== 生成 Plates ==========
+    function generatePlates() {
+      for (let i = 1; i <= 5; i++) {
+        const block = document.createElement('div');
+        block.className = 'plate-block';
+        block.innerHTML = 
+          '<div class="plate-title">Plate Type ' + i + '</div>' +
+          '<table class="plate-table-row1">' +
+            '<thead><tr><th>Grade</th><th>Surface</th><th>Location</th></tr></thead>' +
+            '<tbody><tr>' +
+              '<td><select id="grade' + i + '"><option value="">-</option></select></td>' +
+              '<td><select id="surface' + i + '"><option value="">-</option></select></td>' +
+              '<td><select id="location' + i + '"><option value="">-</option></select></td>' +
+            '</tr></tbody>' +
+          '</table>' +
+          '<table class="plate-table-row2">' +
+            '<thead><tr><th>Dimension</th><th>Thickness</th><th>Current Stock</th></tr></thead>' +
+            '<tbody><tr>' +
+              '<td><select id="dimension' + i + '"><option value="">-</option></select></td>' +
+              '<td><select id="thickness' + i + '"><option value="">-</option></select></td>' +
+              '<td><input type="text" id="currentStock' + i + '" placeholder="pcs" readonly style="background:#fef7ea;"></td>' +
+            '</tr></tbody>' +
+          '</table>' +
+          '<table class="calc-table">' +
+            '<thead>' +
+              '<tr><th>Piece Area (mm²)</th><th>Piece Fraction</th><th>Actual Full Plate (Qty)</th></tr>' +
+            '</thead>' +
+            '<tbody><tr>' +
+              '<td><input type="number" id="pieceArea' + i + '" step="0.1" min="0" placeholder="0"></td>' +
+              '<td><input type="number" id="pieceFraction' + i + '" step="1" min="1" placeholder="0"></td>' +
+              '<td><input type="number" id="actualFullPlateQty' + i + '" step="1" min="0" placeholder="0"></td>' +
+            '</tr></tbody>' +
+          '</table>' +
+          '<div style="display:flex; justify-content:flex-end; margin-top:4px;">' +
+            '<span class="status-cell" id="status' + i + '"></span>' +
+          '</div>';
+        platesContainer.appendChild(block);
+        
+        const gradeEl = document.getElementById('grade' + i);
+        const surfaceEl = document.getElementById('surface' + i);
+        const locationEl = document.getElementById('location' + i);
+        const dimensionEl = document.getElementById('dimension' + i);
+        const thicknessEl = document.getElementById('thickness' + i);
+        const pieceAreaEl = document.getElementById('pieceArea' + i);
+        const pieceFractionEl = document.getElementById('pieceFraction' + i);
+        const actualQtyEl = document.getElementById('actualFullPlateQty' + i);
+        
+        const updateFunc = function() {
+          updateCurrentStock(i);
+          updateUI();
+        };
+        
+        if (gradeEl) gradeEl.addEventListener('change', updateFunc);
+        if (surfaceEl) surfaceEl.addEventListener('change', updateFunc);
+        if (locationEl) locationEl.addEventListener('change', updateFunc);
+        if (dimensionEl) dimensionEl.addEventListener('change', updateFunc);
+        if (thicknessEl) thicknessEl.addEventListener('change', updateFunc);
+        if (pieceAreaEl) pieceAreaEl.addEventListener('input', updateFunc);
+        if (pieceFractionEl) pieceFractionEl.addEventListener('input', updateFunc);
+        if (actualQtyEl) actualQtyEl.addEventListener('input', updateFunc);
+      }
+    }
+
+    // ========== 收集 Plates 数据 ==========
+    function collectPlatesData() {
+      const plates = [];
+      const { errorMap } = collectAllErrors();
+      for (let i = 1; i <= 5; i++) {
+        const grade = document.getElementById('grade' + i).value;
+        if (!grade) continue;
+        
+        plates.push({
+          plateType: 'Plate ' + i,
+          grade: grade,
+          surface: document.getElementById('surface' + i).value,
+          location: document.getElementById('location' + i).value,
+          dimension: document.getElementById('dimension' + i).value,
+          thickness: document.getElementById('thickness' + i).value,
+          currentStock: document.getElementById('currentStock' + i).value,
+          pieceArea: document.getElementById('pieceArea' + i).value,
+          pieceFraction: document.getElementById('pieceFraction' + i).value,
+          actualFullPlateQty: document.getElementById('actualFullPlateQty' + i).value,
+          errorMessage: errorMap[i] || ''
+        });
+      }
+      return plates;
+    }
+
+    function collectAllData() {
+      return {
+        timestamp: new Date().toISOString(),
+        storeKeeper: storeKeeperName,
+        soNo: isUrgentMode ? '(URGENT - Missing)' : soNo.value.trim(),
+        itemNo: isUrgentMode ? '(URGENT - Missing)' : itemNo.value.trim(),
+        customerName: isUrgentMode ? (urgentData.customerInfo || '(Urgent - No SO)') : customerName.value.trim(),
+        deliveryDate: isUrgentMode ? '' : deliveryDate.value,
+        requestor: requestorSelect.value,
+        projectPIC: isUrgentMode ? urgentData.projectPIC : '',
+        customerInfo: isUrgentMode ? urgentData.customerInfo : '',
+        platesData: JSON.stringify(collectPlatesData()),
+        isUrgentMode: isUrgentMode
+      };
+    }
+
+    // ========== 提交 ==========
+    async function submitData(data) {
+      const formBody = new URLSearchParams();
+      formBody.append('action', 'submit');
+      Object.keys(data).forEach(function(k) { formBody.append(k, data[k]); });
+      const response = await fetch(GAS_WEBAPP_URL, { method: 'POST', body: formBody });
+      return await response.json();
+    }
+
+    function showErrorModal(errorsList) {
+      var msg = '<strong>Issues found:</strong><br>' + errorsList.map(function(e) { return '• ' + e; }).join('<br>');
+      modalErrorList.innerHTML = msg;
+      
+      if (countdownTimer) clearInterval(countdownTimer);
+      var seconds = 5;
+      modalYesBtn.textContent = 'Yes (' + seconds + 's)';
+      modalYesBtn.disabled = true;
+      
+      countdownTimer = setInterval(function() {
+        seconds--;
+        if (seconds <= 0) {
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+          modalYesBtn.textContent = 'Yes, Continue';
+          modalYesBtn.disabled = false;
+        } else {
+          modalYesBtn.textContent = 'Yes (' + seconds + 's)';
+        }
+      }, 1000);
+      
+      errorModal.style.display = 'flex';
+      
+      modalYesBtn.onclick = function() {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+        errorModal.style.display = 'none';
+        proceedWithSubmit(true);
+      };
+      modalNoBtn.onclick = function() {
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+        errorModal.style.display = 'none';
+      };
+    }
+
+    function proceedWithSubmit(ignoreErrors) {
+      if (!ignoreErrors) return;
+      performActualSubmit();
+    }
+
+    async function performActualSubmit() {
+      if (hasSubmitted) return;
+      
+      currentData = collectAllData();
+      messageBar.className = 'message-bar info-bar';
+      messageBar.innerHTML = '<span class="spinner"></span> Submitting...';
+      submitBtn.disabled = true;
+      
+      var result = await submitData(currentData);
+      
+      if (result.result === 'success') {
+        messageBar.className = 'message-bar success-bar';
+        messageBar.innerHTML = '✅ Submitted successfully!';
+        hasSubmitted = true;
+        submitBtn.classList.remove('active');
+        submitBtn.textContent = 'Submitted';
+        submitBtn.classList.add('submitted');
+        submitBtn.disabled = true;
+        currentData = null;
+      } else {
+        messageBar.className = 'message-bar error-bar';
+        messageBar.innerHTML = '❌ Submit failed: ' + (result.message || 'Unknown error');
+        submitBtn.disabled = false;
+        if (isSubmitEnabled) submitBtn.classList.add('active');
+      }
+    }
+
+    function handleSubmitClick() {
+      if (hasSubmitted) return;
+      if (!isSubmitEnabled) {
+        alert('Please complete all required fields first.');
+        return;
+      }
+      
+      var nonBlockingErrors = collectAllErrors().nonBlockingErrors;
+      if (nonBlockingErrors.length > 0) {
+        showErrorModal(nonBlockingErrors);
+      } else {
+        performActualSubmit();
+      }
+    }
+
+    // ========== 紧急模式 ==========
+    function showUrgentModal() {
+      urgentProjectPIC.value = urgentData.projectPIC;
+      urgentCustomerInfo.value = urgentData.customerInfo;
+      urgentModalError.style.display = 'none';
+      urgentModal.style.display = 'flex';
+    }
+
+    function hideUrgentModal() {
+      urgentModal.style.display = 'none';
+    }
+
+    function onUrgentModeChange() {
+      if (pendingUrgentCheck) return;
+      if (urgentModeCheckbox.checked) {
+        pendingUrgentCheck = true;
+        showUrgentModal();
+      } else {
+        if (isUrgentMode) {
+          isUrgentMode = false;
+          urgentData = { projectPIC: '', customerInfo: '' };
+          formContainer.classList.remove('urgent-mode-active');
+          soNo.disabled = false;
+          itemNo.disabled = false;
+          onSoOrItemChange();
+        }
+        updateUI();
+      }
+    }
+
+    function onUrgentModalOk() {
+      var pic = urgentProjectPIC.value.trim();
+      if (!pic) {
+        urgentModalError.style.display = 'block';
+        return;
+      }
+      urgentModalError.style.display = 'none';
+      urgentData = { projectPIC: pic, customerInfo: urgentCustomerInfo.value.trim() };
+      isUrgentMode = true;
+      soNo.value = ''; itemNo.value = ''; customerName.value = ''; deliveryDate.value = '';
+      soNo.disabled = true; itemNo.disabled = true;
+      formContainer.classList.add('urgent-mode-active');
+      hideUrgentModal();
+      pendingUrgentCheck = false;
+      updateUI();
+    }
+
+    function onUrgentModalCancel() {
+      urgentModeCheckbox.checked = false;
+      isUrgentMode = false;
+      urgentData = { projectPIC: '', customerInfo: '' };
+      soNo.disabled = false; itemNo.disabled = false;
+      formContainer.classList.remove('urgent-mode-active');
+      hideUrgentModal();
+      pendingUrgentCheck = false;
+      updateUI();
+    }
+
+    // ========== Event Listeners ==========
+    copyCountCircle.addEventListener('click', handleCopyCountCircleClick);
+    copyBtn.addEventListener('click', handleCopyClick);
+    
+    document.addEventListener('input', function(e) {
+      if (hasSubmitted) return;
+      updateUI();
+    });
+    document.addEventListener('change', function(e) {
+      if (hasSubmitted) return;
+      updateUI();
+    });
+    
+    submitBtn.addEventListener('click', handleSubmitClick);
+    
+    soNo.addEventListener('input', function() {
+      if (hasSubmitted || isUrgentMode) return;
+      if (soItemDebounceTimer) clearTimeout(soItemDebounceTimer);
+      soItemDebounceTimer = setTimeout(function() { onSoOrItemChange(); }, 500);
+    });
+    itemNo.addEventListener('input', function() {
+      if (hasSubmitted || isUrgentMode) return;
+      if (soItemDebounceTimer) clearTimeout(soItemDebounceTimer);
+      soItemDebounceTimer = setTimeout(function() { onSoOrItemChange(); }, 500);
+    });
+    
+    urgentModeCheckbox.addEventListener('change', onUrgentModeChange);
+    document.getElementById('urgentModalOkBtn').addEventListener('click', onUrgentModalOk);
+    document.getElementById('urgentModalCancelBtn').addEventListener('click', onUrgentModalCancel);
+    
+    window.addEventListener('load', async function() {
+      initStorekeeper();
+      generatePlates();
+      await fetchReferenceOptions();
+      populateRequestorSelect();
+      populateAllPlateDropdowns();
+      updateUI();
+      checkForPreloadedData();
+    });
+  })();
+</script>
+</body>
+</html>
